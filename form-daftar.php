@@ -1,3 +1,38 @@
+<?php
+
+    include "config.php";
+
+    if(isset($_POST['form-daftar'])) {
+
+        $name=$_POST['Nama'];
+        $email=$_POST['Email'];
+        $nim=$_POST['NIM'];
+        $prodi=$_POST['Program Studi'];
+        $fakultas=$_POST['Fakultas'];
+        $alamat=$_POST['Alamat'];
+        $JK=$_POST['Jenis_Kelamin'];
+        
+
+        //cek apakah sudah terdaftar atau belum
+        $ambilDataUsers = mysqli_query($conn, "SELECT COUNT(NIM) AS row FROM pendaftar WHERE NIM='$nim' AND Email='$email'");
+        $data = mysqli_fetch_assoc($ambilDataUsers);
+        $rowCount = $data['row'];
+
+        if($rowCount!=0) {
+            echo "<scrip>alert('Username dan Email sudah terdaftar!')</script>";
+        } else {
+            $query="INSERT INTO pendaftar (Nama,  Email, NIM, Program Studi, Fakultas, Alamat, Jenis_Kelamin) VALUES ('$name', '$email', '$nim', '$prodi', '$fakultas', '$alamat', '$JK')";
+            $simpan= mysqli_query($conn, $query);
+            if($simpan){
+                header("url= pilihan-bid.php");
+                echo "<script>alert('Berhasil terdaftar!')</script>";
+            } else {
+                echo "<script>alert('Gagal mendaftar!')</script>";
+                header("Location: from-daftar.php");
+            }
+        }
+     }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +49,7 @@
 </head>
 
 <body>
+    
     <div id="app">
        
         <div id="main">
@@ -104,13 +140,13 @@
             <section id="basic-horizontal-layouts">
                 <div class="row match-height">
                     <div class="col-md-6 col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">Isi Data Diri Pendaftar</h4>
-                                </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Isi Data Diri Pendaftar</h4>
+                            </div>
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form form-horizontal">
+                                        <form method="POST">
                                             <div class="form-body">
                                                 <div class="row">
                                                     <div class="col-md-4">
@@ -155,13 +191,15 @@
                                                     <div class="col-md-8 form-group">
                                                         <input type="text" id="alamat" class="form-control" name="alamat" placeholder="Alamat">
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4"> 
                                                         <label>Jenis Kelamin</label>
                                                     </div>
                                                     <div class="col-md-8 form-group">
-                                                        <input type="text" id="jenis kelamin" class="form-control" name="jenis kelamin" placeholder="Jenis Kelamin">
-                                                    </div>
-                                                    <div class="col-12 col-md-8 offset-md-4 form-group">
+                                                        <select class="form-select" id="inputGroupSelect01">
+                                                            <option selected>Choose...</option>
+                                                            <option value="1">Laki-laki</option>
+                                                            <option value="2">Perempuan</option>
+                                                        </select>
                                                     </div>
                                                     <div class="col-12 d-flex justify-content-end">
                                                         <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
@@ -173,14 +211,14 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!--pendaftar end-->
                     
-            <!--pilihan bidang-->
+            <!--pilihan bidang
                 <section id="basic-horizontal-layouts">
                     <div class="row match-height">
                         <div class="col-md-6 col-12">
@@ -203,13 +241,23 @@
                                                         <label>Pilihan 1</label>
                                                     </div>
                                                     <div class="col-md-8 form-group">
-                                                        <input type="textl" id="pilihan 1" class="form-control" name="pilihan 1" placeholder="Pilihan 1">
+                                                        <select class="form-select" id="inputGroupSelect01">
+                                                            <option selected>Choose...</option>
+                                                            <option value="1">Bidang 1</option>
+                                                            <option value="2">Bidang 2</option>
+                                                            <option value="2">Bidang 2</option>
+                                                        </select>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <label>Pilihan 2</label>
                                                     </div>
                                                     <div class="col-md-8 form-group">
-                                                        <input type="text" id="Pilihan 2" class="form-control" name="Pilihan 2" placeholder="Pilihan 2">
+                                                        <select class="form-select" id="inputGroupSelect01">
+                                                            <option selected>Choose...</option>
+                                                            <option value="1">Bidang 1</option>
+                                                            <option value="2">Bidang 2</option>
+                                                            <option value="2">Bidang 2</option>
+                                                        </select>
                                                     </div>
                                                     <div class="col-12 col-md-8 offset-md-4 form-group">
                                                     </div>
@@ -226,9 +274,9 @@
                         </div>  
                     </div>     
                 </section>
-                <!--pilhan bidang end-->
+                pilhan bidang end
 
-                 <!-- Bukti Pembayaran -->
+                Bukti Pembayaran 
                 <section id="input-file-browser">
                     <div class="row match-height">
                         <div class="col-md-6 col-12">
@@ -257,6 +305,8 @@
                                                         </label>
                                                     </div>
                                                     </div>
+                                                    <div class="col-12 col-md-8 offset-md-4 form-group">
+                                                    </div>
                                                     <div class="col-12 d-flex justify-content-end">
                                                         <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
                                                         <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
@@ -271,62 +321,65 @@
                         </div>
                     </div>           
                 </section>
-                <!-- bukti pembayaran end -->
+                bukti pembayaran end 
 
-                <!--prestasi-->
+                prestasi
                 <section id="input-file-browser">
                     <div class="row match-height">
                         <div class="col-md-6 col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4 class="card-title">Isi Data Diri Pendaftar</h4>
-                                    </div>
-                                    <div class="card-content">
-                                        <div class="card-body">
-                                            <form class="form form-horizontal">
-                                                <div class="form-body">
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <label>NIM</label>
-                                                        </div>
-                                                        <div class="col-md-8 form-group">
-                                                            <input type="number" id="contact-info" class="nim" name="nim" placeholder="NIM">
-                                                        </div> 
-                                                        <div class="col-md-4">
-                                                            <label>Prestasi</label>
-                                                        </div>
-                                                        <div class="col-md-8 form-group">
-                                                            <input type="text" id="prestasi" class="prestasi" name="prestasi" placeholder="Prestasi">
-                                                        </div> 
-                                                        <div class="form-group with-title mb-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Prestasi yang kamu miliki</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="card-body">
+                                        <form class="form form-horizontal">
+                                            <div class="form-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <label>NIM</label>
+                                                    </div>
+                                                    <div class="col-md-8 form-group">
+                                                        <input type="number" id="contact-info" class="nim" name="nim" placeholder="NIM">
+                                                    </div> 
+                                                    <div class="col-md-4">
+                                                        <label>Deskripsi Prestasi</label>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="form-group mb-3">
                                                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                                            <label>Deskirpsi Prestasi</label>
                                                         </div>
-                                                        <div class="form-file">
-                                                            <div class="col-lg-6 col-md-12">
-                                                                <p>Bukti Prestasi</p>
-                                                                <input type="file" class="form-file-input" id="customFile">
-                                                                <label class="form-file-label" for="customFile">
-                                                                    <span class="form-file-text">Choose file...</span>
-                                                                    <span class="form-file-button">Browse</span>
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-12 d-flex justify-content-end">
-                                                            <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
-                                                            <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-8 offset-md-4 form-group">
+                                                    </div>
+                                                    <div class="form-file">
+                                                    <div class="col-lg-6 col-md-12">
+                                                        <p>Bukti Prestasi</p>
+                                                        <input type="file" class="form-file-input" id="customFile">
+                                                        <label class="form-file-label" for="customFile">
+                                                            <span class="form-file-text">Choose file...</span>
+                                                            <span class="form-file-button">Browse</span>
+                                                        </label>
+                                                    </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-8 offset-md-4 form-group">
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-end">
+                                                        <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
+                                                        <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form>
+                                        </from>
+                                        </div>
                                     </div>
-                                </div>  
-                            </div> 
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </div>           
                 </section>
-            
+            prestasi end-->
+        </div>
             
 
             <footer>
@@ -339,7 +392,7 @@
                     </div>
                 </div>
             </footer>
-        </div>
+        
     </div>
     <script src="assets/js/feather-icons/feather.min.js"></script>
     <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
